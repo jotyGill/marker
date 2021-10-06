@@ -80,12 +80,12 @@ def verify_requirements():
 def main():
     verify_requirements()
     print("---------------------------------------")
-    config_dir_relative_path = '.local/share/marker'
+    config_dir_relative_path = '.config/ezsh/marker'
     config_dir_abosulte_path = os.path.join(os.path.expanduser("~"), config_dir_relative_path)
     install_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 
     mkdir(config_dir_abosulte_path)
-    
+
     write_to_file(
         os.path.join(config_dir_abosulte_path, 'marker.sh'),
         generate_marker_sh(config_dir_abosulte_path, install_dir))
