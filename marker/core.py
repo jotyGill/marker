@@ -29,7 +29,8 @@ def get_tldr_os_marks_path():
     return os.path.join(os.getenv('MARKER_HOME'), 'tldr', get_os()+'.txt')
 def get_tldr_common_marks_path():
     return os.path.join(os.getenv('MARKER_HOME'), 'tldr', 'common.txt')
-
+def get_tldr_security_marks_path():
+    return os.path.join(os.getenv('MARKER_HOME'), 'tldr', 'security.txt')
 
 def mark_command(cmd_string, alias):
     ''' Adding a new Mark '''
@@ -58,7 +59,8 @@ def get_selected_command_or_input(search):
     ''' Display an interactive UI interface where the user can type and select commands
         this function returns the selected command if there is matches or the written characters in the prompt line if no matches are present
     '''
-    commands = command.load(get_user_marks_path()) + command.load(get_tldr_os_marks_path()) + command.load(get_tldr_common_marks_path())
+    commands = command.load(get_user_marks_path()) + command.load(get_tldr_os_marks_path()) \
+        + command.load(get_tldr_common_marks_path()) + command.load(get_tldr_security_marks_path())
     state = State(commands, search)
     # draw the screen (prompt + matchd marks)
     renderer.refresh(state)
