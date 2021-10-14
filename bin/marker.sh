@@ -5,7 +5,7 @@ alias marker="${MARKER_HOME}/bin/marker"
 # default key bindings
 marker_key_mark="${MARKER_KEY_MARK:-\C-k}"
 marker_key_get="${MARKER_KEY_GET:-\C-@}"
-marker_key_next_placeholder="${MARKER_KEY_NEXT_PLACEHOLDER:-\C-t}"
+marker_key_next_placeholder="${MARKER_KEY_NEXT_PLACEHOLDER:-\C-h}"
 
 function get_cursor_position(){
   # based on a script from http://invisible-island.net/xterm/xterm.faq.html
@@ -89,7 +89,7 @@ if [[ -n "$ZSH_VERSION" ]]; then
         if [[ ! -z "$match" ]]; then
             len=${#match}
             match=$(echo "$match" | sed 's/"/\\"/g')
-            placeholder_offset=$(echo "$BUFFER" | python -c 'import sys;keyboard_input = raw_input if sys.version_info[0] == 2 else input; print(keyboard_input().index("'$match'"))')
+            placeholder_offset=$(echo "$BUFFER" | python3 -c 'import sys;keyboard_input = raw_input if sys.version_info[0] == 2 else input; print(keyboard_input().index("'$match'"))')
             CURSOR="$placeholder_offset"
             BUFFER="${BUFFER[1,$placeholder_offset]}${BUFFER[$placeholder_offset+1+$len,-1]}"
         fi        
@@ -114,7 +114,7 @@ elif [[ -n "$BASH" ]]; then
         if [[ ! -z "$match" ]]; then
             len=${#match}
             match=$(echo "$match" | sed 's/"/\\"/g')
-            placeholder_offset=$(echo "$READLINE_LINE" | python -c 'import sys;keyboard_input = raw_input if sys.version_info[0] == 2 else input; print(keyboard_input().index("'$match'"))')
+            placeholder_offset=$(echo "$READLINE_LINE" | python3 -c 'import sys;keyboard_input = raw_input if sys.version_info[0] == 2 else input; print(keyboard_input().index("'$match'"))')
             READLINE_POINT="$placeholder_offset"
             READLINE_LINE="${READLINE_LINE:0:$placeholder_offset}${READLINE_LINE:$placeholder_offset+$len}"
         fi        
