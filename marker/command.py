@@ -28,7 +28,7 @@ class Command(object):
     '''A Command is composed of the shell command string and an optionnal alias'''
     def __init__(self, cmd, alias):
         if not cmd:
-            raise "empty command argument"
+            raise ValueError("empty command argument")
         self.cmd = cmd
         self.alias = alias
         if not self.alias:

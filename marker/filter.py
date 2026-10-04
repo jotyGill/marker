@@ -34,7 +34,7 @@ def filter_commands(marks, search_string):
         return sort_marks(marks, "")
 
     filtered_bookmarks = []
-    words_re = re.compile('\w+')
+    words_re = re.compile(r'\w+')
     search_words = words_re.findall(search_string.lower())
     for mark in marks:
         mark_splitted = words_re.findall(mark.cmd.lower()) + words_re.findall(mark.alias.lower())

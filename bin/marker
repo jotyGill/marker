@@ -24,9 +24,6 @@ def parse_arguments():
     parser_get.add_argument("--search", type=str, help="Search string")
     parser_get.set_defaults(func=cmd_remove)
 
-    parser_update = subparsers.add_parser("update", help="update tldr cache")
-    parser_update.set_defaults(func=cmd_update)
-
     args = parser.parse_args()
     return args.func(args)
 
@@ -49,9 +46,6 @@ def cmd_get(args):
 
 def cmd_remove(args):
     core.remove_command(args.search)
-
-def cmd_update():
-    core.update_cache()
 
 def marker_sourced():
     if os.getenv('MARKER_DATA_HOME'):
