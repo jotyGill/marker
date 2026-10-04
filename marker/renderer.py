@@ -1,15 +1,15 @@
-import os
 from . import ansi
 import re
 import math
+import shutil
 import sys
 '''Command line user interface'''
 
 def _get_terminal_columns():
     ''' get the number of terminal columns, used to determine spanned lines of a mark(required for cursor placement) '''
-    rows, columns = os.popen('stty size', 'r').read().split()
+    size = shutil.get_terminal_size()
     # the -1 is to keep the command prompt displayed
-    return int(rows) - 1, int(columns)
+    return size.lines - 1, size.columns
 
 def unicode_length(string):
     if sys.version_info[0] == 2:

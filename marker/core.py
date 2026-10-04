@@ -227,4 +227,4 @@ class State(object):
         if len(self.matches):
             return self.matches[self._selected_command_index]
         else:
-            raise 'No matches found'
+            raise ValueError('No matches found')

@@ -1,12 +1,25 @@
+import sys
 from . import ansi
 
 def load(filePath):
+    ''' load commands from a file, skipping blank or malformed lines
+        (a single bad line must not silently drop the whole file)
+    '''
     lines = []
     try:
         with open(filePath, 'r') as f:
-            lines = [Command.deserialize(l.strip('\n').strip('\r')) for l in f.readlines() if l]
+            raw_lines = f.readlines()
     except:
-        pass
+        # missing or unreadable file(no marks)
+        return lines
+    for l in raw_lines:
+        l = l.strip('\n').strip('\r')
+        if not l:
+            continue
+        try:
+            lines.append(Command.deserialize(l))
+        except ValueError:
+            sys.stderr.write('marker: skipping malformed line in %s: %s\n' % (filePath, l))
     return lines
 
 def save(commands, filePath):
