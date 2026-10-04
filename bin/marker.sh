@@ -1,11 +1,12 @@
-# I rather aliasing Marker than add it to the global variable $PATH or pollute /usr/local directory
+# I rather aliasing Markerpen than add it to the global variable $PATH or pollute /usr/local directory
 # this will make uninstalling easier and it's sufficient(for now)
 alias marker="${MARKER_HOME}/bin/marker"
 
 # default key bindings
 marker_key_mark="${MARKER_KEY_MARK:-\C-k}"
 marker_key_get="${MARKER_KEY_GET:-\C-@}"
-marker_key_next_placeholder="${MARKER_KEY_NEXT_PLACEHOLDER:-\C-h}"
+# Ctrl+f(note: shadows forward-char, use arrow keys to move right)
+marker_key_next_placeholder="${MARKER_KEY_NEXT_PLACEHOLDER:-\C-f}"
 
 function get_cursor_position(){
   # based on a script from http://invisible-island.net/xterm/xterm.faq.html

@@ -8,7 +8,7 @@ from marker import core
 from marker import placeholder
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="Marker: a tool to quickly bookmark and retreive commands")
+    parser = argparse.ArgumentParser(description="Markerpen: a tool to quickly bookmark and retreive commands")
     subparsers = parser.add_subparsers(title="commands", dest="subparser_name")
 
     parser_mark = subparsers.add_parser("mark", help="mark a command")

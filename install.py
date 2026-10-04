@@ -36,7 +36,7 @@ def generate_marker_sh(config_dir, install_dir):
 
 
 def show_post_installation_message(config_dir_rel):
-    print("Marker installed successfully")
+    print("Markerpen installed successfully")
     print("\n")
     sourced_file = '$HOME/%s/marker.sh' % config_dir_rel
     source_msg = "[[ -s \"%s\" ]] && source \"%s\"" % (sourced_file, sourced_file)
@@ -65,7 +65,7 @@ def verify_requirements():
             print(version_text)
             if major_version < 4 or (major_version == 4 and minor_version < 3):
                 print("your Bash version is too old: %s" % version_text, file=sys.stderr)
-                print("Marker requires Bash 4.3+", file=sys.stderr)
+                print("Markerpen requires Bash 4.3+", file=sys.stderr)
                 sys.exit(1)
         else:
             print("Couldn't extract bash version, please report the issue", file=sys.stderr)
