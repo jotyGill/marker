@@ -83,16 +83,25 @@ if [[ -n "$ZSH_VERSION" ]]; then
         BUFFER="$TMP_MARKER"
         zle end-of-line
     }
-    # move the cursor the next placeholder 
+    # move the cursor to the next placeholder({{hint}} or {{choice1|choice2}})
+    # a hint placeholder is removed(as before), a choice placeholder opens a picker
     function _move_cursor_to_next_placeholder {
-        match=$(echo "$BUFFER" | perl -nle 'print $& if m{\{\{.+?\}\}}' | head -n 1)
-        if [[ ! -z "$match" ]]; then
-            len=${#match}
-            match=$(echo "$match" | sed 's/"/\\"/g')
-            placeholder_offset=$(echo "$BUFFER" | python3 -c 'import sys;keyboard_input = raw_input if sys.version_info[0] == 2 else input; print(keyboard_input().index("'$match'"))')
-            CURSOR="$placeholder_offset"
-            BUFFER="${BUFFER[1,$placeholder_offset]}${BUFFER[$placeholder_offset+1+$len,-1]}"
-        fi        
+        line_file=$(mktemp -t markerph.XXXX)
+        out_file=$(mktemp -t markerph.XXXX)
+        printf '%s' "$BUFFER" > "$line_file"
+        col=$(get_col_position)
+        place_cursor_next_line
+        </dev/tty ${MARKER_HOME}/bin/marker placeholder --line-file="$line_file" --stdout="$out_file"
+        if [[ -s "$out_file" ]]; then
+            placeholder_offset=$(sed -n '1p' "$out_file")
+            placeholder_len=$(sed -n '2p' "$out_file")
+            result="$(sed -n '3p' "$out_file")"
+            BUFFER="${BUFFER[1,$placeholder_offset]}${result}${BUFFER[$placeholder_offset+1+$placeholder_len,-1]}"
+            CURSOR="$((placeholder_offset + ${#result}))"
+        fi
+        rm -f "$line_file" "$out_file"
+        row=$(get_row_position)
+        place_cursor $(($row - 1)) $col
     }
 
     zle -N _marker_get
@@ -108,16 +117,25 @@ if [[ -n "$ZSH_VERSION" ]]; then
 
 elif [[ -n "$BASH" ]]; then
 
-    # move the cursor the next placeholder '%%'
+    # move the cursor to the next placeholder({{hint}} or {{choice1|choice2}})
+    # a hint placeholder is removed(as before), a choice placeholder opens a picker
     function _move_cursor_to_next_placeholder {
-        match=$(echo "$READLINE_LINE" | perl -nle 'print $& if m{\{\{.+?\}\}}' | head -n 1)
-        if [[ ! -z "$match" ]]; then
-            len=${#match}
-            match=$(echo "$match" | sed 's/"/\\"/g')
-            placeholder_offset=$(echo "$READLINE_LINE" | python3 -c 'import sys;keyboard_input = raw_input if sys.version_info[0] == 2 else input; print(keyboard_input().index("'$match'"))')
-            READLINE_POINT="$placeholder_offset"
-            READLINE_LINE="${READLINE_LINE:0:$placeholder_offset}${READLINE_LINE:$placeholder_offset+$len}"
-        fi        
+        line_file=$(mktemp -t markerph.XXXX)
+        out_file=$(mktemp -t markerph.XXXX)
+        printf '%s' "$READLINE_LINE" > "$line_file"
+        col=$(get_col_position)
+        place_cursor_next_line
+        </dev/tty ${MARKER_HOME}/bin/marker placeholder --line-file="$line_file" --stdout="$out_file"
+        if [[ -s "$out_file" ]]; then
+            placeholder_offset=$(sed -n '1p' "$out_file")
+            placeholder_len=$(sed -n '2p' "$out_file")
+            result="$(sed -n '3p' "$out_file")"
+            READLINE_LINE="${READLINE_LINE:0:$placeholder_offset}${result}${READLINE_LINE:$((placeholder_offset+placeholder_len))}"
+            READLINE_POINT="$((placeholder_offset + ${#result}))"
+        fi
+        rm -f "$line_file" "$out_file"
+        row=$(get_row_position)
+        place_cursor $((row - 1)) $col
     }
 
     # Look at zsh _marker_get docstring

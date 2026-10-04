@@ -314,7 +314,7 @@ usermod -m -d {{/path/to/home}} {{user}}##Create a new home directory for a user
 wall -t {{seconds}} {{file}}##Send a message with timeout (default 300)
 wall {{file}}##Send a message from a file
 watch -d {{df}}##Monitor disk space and highlight the changes
-watch -n {{3}} "{{ps aux | grep node}}"##Monitor "node" processes, refreshing every 3 seconds
+watch -n {{3}} "{{ps aux \| grep node}}"##Monitor "node" processes, refreshing every 3 seconds
 watch {{ls}}##Monitor files in the current folder
 wget -qO - {{https://host.tld/filename.key}} | apt-key add -##Add a remote key to the trusted keystore
 wpa_cli add_network {{number}}##Add a network

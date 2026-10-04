@@ -1074,7 +1074,7 @@ who -a##Display all available information
 who am i##Display information only for the current terminal session
 who##Display the username, line, and time of all currently logged-in sessions
 whoami##Display currently logged user name
-x_x --delimiter={{';'}} --quotechar={{'|'}} {{file.csv}}##View a CSV file with unconventional delimiters
+x_x --delimiter={{';'}} --quotechar={{'\|'}} {{file.csv}}##View a CSV file with unconventional delimiters
 x_x -h {{0}} {{file.ext}}##View an XLSX or CSV file, using the first row as table headers
 x_x {{file.ext}}##View an XLSX or CSV file
 xcv c {{input_file}}##Copy a file

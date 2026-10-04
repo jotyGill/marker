@@ -1,3 +1,4 @@
+import re
 import sys
 
 BOLD = "\x1b[1m"
@@ -6,7 +7,10 @@ ERASE_SCREEN = "\x1b[J"
 ERASE_LINE = "\x1b[2K"
 FOREGROUND_BLACK = "\x1b[30m"
 BACKGROUND_WHITE = "\x1b[47m"
-FOREGROUND_GREY = "\x1b[34m"
+FOREGROUND_GREY = "\x1b[94m"  # actually bright blue (historic name kept)
+FOREGROUND_LIGHT_GRAY = "\x1b[38;5;250m"  # light gray, just off the default text color
+
+PLACEHOLDER_PATTERN = re.compile(r'\{\{[^{}]*\}\}')
 
 def _CURSOR_COLUMN(pos):
     return "\x1b["+str(pos)+"G"
@@ -25,9 +29,15 @@ def select_text(text):
             BACKGROUND_WHITE + 
             text.replace(
                 CLEAR_FORMATTING,
-                CLEAR_FORMATTING + FOREGROUND_BLACK + BACKGROUND_WHITE)+
+                CLEAR_FORMATTING + FOREGROUND_BLACK + BACKGROUND_WHITE).replace(FOREGROUND_LIGHT_GRAY, "")+
             CLEAR_FORMATTING +
             get_formattings(text))
+
+
+def highlight_placeholders(text):
+    return PLACEHOLDER_PATTERN.sub(
+        lambda match: FOREGROUND_LIGHT_GRAY + match.group(0) + CLEAR_FORMATTING,
+        text)
 
 
 def bold_text(text):

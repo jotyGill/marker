@@ -53,9 +53,9 @@ def _construct_output(state):
     num_rows += number_of_rows(prompt_line)
     matches = state.get_matches()
     if matches:
-        # display commands from Max(0,selected_command_index - 10 +1 ) to Max(10,SelectedCommandIndex + 1)
+        # display commands from Max(0,selected_command_index - 15 +1 ) to Max(15,SelectedCommandIndex + 1)
         selected_command_index = matches.index(state.get_selected_match())
-        num_results = 10
+        num_results = 15
         matches_to_display = []
         while (True):
             filtered_matches = matches[max(0, selected_command_index - num_results + 1):max(num_results, selected_command_index + 1)]
@@ -72,6 +72,8 @@ def _construct_output(state):
             for w in state.input.split(' '):
                 if w:
                     fm = fm.replace(w, ansi.bold_text(w))
+            # highlight {{placeholders}} in a different color
+            fm = ansi.highlight_placeholders(fm)
             # highlighting selected command
             if m == state.get_selected_match():
                 fm = ansi.select_text(fm)

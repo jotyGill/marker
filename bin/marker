@@ -5,6 +5,7 @@ import argparse
 import os
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..'))
 from marker import core
+from marker import placeholder
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Marker: a tool to quickly bookmark and retreive commands")
@@ -23,6 +24,11 @@ def parse_arguments():
     parser_get = subparsers.add_parser("remove", help="remove a marked command given an optionnal prefix")
     parser_get.add_argument("--search", type=str, help="Search string")
     parser_get.set_defaults(func=cmd_remove)
+
+    parser_placeholder = subparsers.add_parser("placeholder", help="fill the next {{placeholder}} in the given line")
+    parser_placeholder.add_argument("--line-file", type=str, help="file containing the current command line")
+    parser_placeholder.add_argument("--stdout", type=str, help="where to store the result(offset, length, choice)")
+    parser_placeholder.set_defaults(func=cmd_placeholder)
 
     args = parser.parse_args()
     return args.func(args)
@@ -46,6 +52,9 @@ def cmd_get(args):
 
 def cmd_remove(args):
     core.remove_command(args.search)
+
+def cmd_placeholder(args):
+    placeholder.run(args.line_file, args.stdout)
 
 def marker_sourced():
     if os.getenv('MARKER_DATA_HOME'):
