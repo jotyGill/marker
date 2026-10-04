@@ -14,6 +14,8 @@ def parse_arguments():
     parser_mark = subparsers.add_parser("mark", help="mark a command")
     parser_mark.add_argument("--command", type=str, help="Command to mark")
     parser_mark.add_argument("--alias", type=str, help="an alias of the command")
+    parser_mark.add_argument("--collection", type=str, help="collection to file the command under(a-z 0-9 _ -)")
+    parser_mark.add_argument("--tags", type=str, help="comma separated tags(e.g. win,idea)")
     parser_mark.set_defaults(func=cmd_mark)
 
     parser_get = subparsers.add_parser("get", help="get marker commands that match a given search string")
@@ -35,7 +37,8 @@ def parse_arguments():
 
 
 def cmd_mark(args):
-    core.mark_command(args.command, None)
+    tags = [t for t in (args.tags or '').split(',')]
+    core.mark_command(args.command, args.alias, args.collection, tags)
 
 
 def cmd_get(args):

@@ -18,8 +18,11 @@ It's also shipped with many commands common usage(Thanks to [tldr](https://githu
 ## Usage
 - `Ctrl-space`: search for commands that match the current written string in the command-line.
 - `Ctrl-k` (or `marker mark`): Bookmark a command.
-- `Ctrl-h`: place the cursor at the next placeholder, identified by '{{anything}}'
+- `Ctrl-h`: place the cursor at the next placeholder, identified by '{{anything}}'; `{{a|b}}` placeholders offer an arrow-key choice(`<exclude>` drops an optional part).
 - `marker remove`: remove a bookmark
+- `@collection` in the search box: look only within that collection(e.g. `@web`)
+- `#tag` in the search box: filter by tags(e.g. `#win`, `#idea`), combinable: `@web #win nmap`
+- `marker mark --command=... --collection=web --tags=win,idea`: bookmark into a collection with tags(collections live in `collections/*.txt` under the marker data dir)
 
 You can customize key binding using environment variables, respectively with ```MARKER_KEY_GET```, ```MARKER_KEY_MARK``` and ```MARKER_KEY_NEXT_PLACEHOLDER```.
 

@@ -36,12 +36,18 @@ def _render(options, selected):
     # the empty option is displayed as <exclude>(it stays '' when chosen)
     labels = [o if o != '' else EXCLUDE_LABEL for o in options]
     # per-option budget keeps the menu on a single terminal row
-    budget = cols - 1 - _visible_length(HINT) - len(sep) * (len(options) - 1)
-    per_option = max(4, budget // len(options))
+    # (the hint is dropped and options shrink on narrow terminals)
+    budget = cols - 1 - len(sep) * (len(options) - 1)
+    if budget - _visible_length(HINT) >= len(options) * 4:
+        budget -= _visible_length(HINT)
+        hint = ansi.grey_text(HINT)
+    else:
+        hint = ''
+    per_option = max(1, budget // len(options))
     rendered = [
         ansi.select_text(l[:per_option]) if i == selected else l[:per_option]
         for i, l in enumerate(labels)]
-    return sep.join(rendered) + ansi.grey_text(HINT)
+    return sep.join(rendered) + hint
 
 def _erase_menu():
     ansi.move_cursor_line_beggining()
@@ -71,7 +77,15 @@ def run(line_file, out_file):
         on success write "offset\nmatch_length\nchoice\n" to the out file,
         write nothing when there is no placeholder or the choice was aborted
     '''
-    with open(line_file, 'r') as f:
+    try:
+        _run(line_file, out_file)
+    except Exception as e:
+        # never dump a traceback mid-keystroke: an empty out file makes the
+        # shell widget a no-op, which is the graceful way to fail here
+        sys.stderr.write('marker placeholder: %s\n' % e)
+
+def _run(line_file, out_file):
+    with open(line_file, 'r', encoding='utf-8') as f:
         line = f.read().rstrip('\n')
     parsed = parse_placeholder(line)
     if not parsed:
@@ -93,5 +107,5 @@ def run(line_file, out_file):
         choice = options[0]
     else:
         choice = ''
-    with open(out_file, 'w') as f:
+    with open(out_file, 'w', encoding='utf-8') as f:
         f.write('%d\n%d\n%s\n' % (offset, length, choice))

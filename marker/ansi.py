@@ -56,6 +56,14 @@ def grey_text(text):
                 CLEAR_FORMATTING +
                 get_formattings(text))
 
+def light_gray_text(text):
+    return  (FOREGROUND_LIGHT_GRAY +
+            text.replace(
+                CLEAR_FORMATTING,
+                CLEAR_FORMATTING + FOREGROUND_LIGHT_GRAY)+
+                CLEAR_FORMATTING +
+                get_formattings(text))
+
 
 def move_cursor_line_beggining():
     sys.stdout.write(_CURSOR_COLUMN(0))
